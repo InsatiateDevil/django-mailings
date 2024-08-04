@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load media_tag %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a class="btn btn-outline-primary btb-right" href="{% url 'users:user-update' user.pk %}">Редактировать профиль</a>
+</div>
+    </div>
+    </div>
+<div class="col-6 card mb-4 box-shadow">
+    <div class="card-header">
+        <h4 class="my-0 font-weight-normal">{{user.first_name}} {{user.last_name}}</h4>
+    </div>
+    <div class="card-body">
+        <img class="card-img-top img-fluid" src="{{ user.avatar | media_tag }}">
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>{{user.email}}</li>
+            {% if user.phone_number %}
+            <li>{{ user.phone_number }}</li>
+            {% else %}
+            <li>Вы еще не указали номер телефона</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

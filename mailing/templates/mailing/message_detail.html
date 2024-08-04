@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card mb-4 box-shadow">
+    <div class="card-header">
+        <h4 class="my-0 font-weight-normal">{{message.subject}}</h4>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Текст: {{message.message}}</li>
+        </ul>
+        <a class="btn btn-lg btn-block btn-warning" href="{% url 'mailing:message_update' object.pk %}">Изменить</a>
+        <a class="btn btn-lg btn-block btn-danger" href="{% url 'mailing:message_delete' object.pk %}">Удалить</a>
+    </div>
+</div>
+{% endblock %}

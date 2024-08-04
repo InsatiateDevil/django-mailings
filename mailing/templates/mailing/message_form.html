@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="col-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-6">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-body">
+                        {% if object %}
+                        <h3>Изменить сообщение</h3>
+                        {% else %}
+                        <h3>Создать сообщение</h3>
+                        {% endif %}
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        {% if object %}
+                        <button type="submit" class="btn btn-success">Сохранить
+                        </button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success">Создать
+                        </button>
+                        {% endif %}
+                        {% if object %}
+                        <a class="btn btn-primary "
+                           href="{% url 'mailing:message_list' %}">Отмена</a>
+                        {% else %}
+                        <a class="btn btn-primary "
+                           href="{% url 'mailing:message_list' %}">Отмена</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

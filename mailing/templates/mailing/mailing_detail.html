@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card mb-4 box-shadow">
+    <div class="card-header">
+        <h4 class="my-0 font-weight-normal">{{mailing.name}}</h4>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Время первого отправления: {{mailing.first_send_datetime}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Время следующей отправки: {{mailing.next_send_datetime}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Время окончания отправки: {{mailing.last_send_datetime}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Периодичность: {{mailing.get_period_display}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Статус: {{mailing.get_status_display}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Сообщение: {{mailing.message.message}}</li>
+        </ul>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>Клиенты для рассылки:
+            {% for client in mailing.clients.all %}
+            {{client.name}} - {{client.email}}|
+            {% endfor %}</li>
+        </ul>
+        <button type="button" class="btn btn-lg btn-block btn-outline-primary">
+            Деактивировать
+        </button>
+        <a class="btn btn-lg btn-block btn-primary" href="#">Перейти в логи</a>
+        <a class="btn btn-lg btn-block btn-warning" href="{% url 'mailing:mailing_update' object.pk %}">Изменить</a>
+        <a class="btn btn-lg btn-block btn-danger" href="{% url 'mailing:mailing_delete' object.pk %}">Удалить</a>
+    </div>
+</div>
+{% endblock %}
