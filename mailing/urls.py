@@ -5,7 +5,7 @@ from mailing.views import HomeTemplateView, MailingListView, MailingCreateView, 
     MailingUpdateView, MailingDeleteView, MailingDetailView, ClientListView, \
     ClientDetailView, ClientCreateView, ClientUpdateView, ClientDeleteView, \
     MessageListView, MessageDetailView, MessageCreateView, MessageUpdateView, \
-    MessageDeleteView
+    MessageDeleteView, mailing_cancel, mailing_activate, MailingTryListView
 
 app_name = MailingConfig.name
 
@@ -16,6 +16,8 @@ urlpatterns = [
     path('mailing_create/', MailingCreateView.as_view(), name='mailing_create'),
     path('mailing_update/<int:pk>/', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailing_delete/<int:pk>/', MailingDeleteView.as_view(), name='mailing_delete'),
+    path('mailing_cancel/<int:pk>/', mailing_cancel, name='mailing_cancel'),
+    path('mailing_activate/<int:pk>/', mailing_activate, name='mailing_activate'),
     path('client_list/', ClientListView.as_view(), name='client_list'),
     path('client_detail/<int:pk>/', ClientDetailView.as_view(), name='client_detail'),
     path('client_create/', ClientCreateView.as_view(), name='client_create'),
@@ -26,4 +28,5 @@ urlpatterns = [
     path('message_create/', MessageCreateView.as_view(), name='message_create'),
     path('message_update/<int:pk>/', MessageUpdateView.as_view(), name='message_update'),
     path('message_delete/<int:pk>/', MessageDeleteView.as_view(), name='message_delete'),
+    path('mailing_try/<int:pk>/', MailingTryListView.as_view(), name='mailingtry_list'),
 ]

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load media_tag %}
+{% block content %}
+<div class="container flex-d justify-content-center">
+<div class="col-10 card mb-4 box-shadow">
+    <div class="card-header">
+        <h4 class="my-0 font-weight-normal text-center">{{blog.title}}</h4>
+        <a class="text-muted">{{blog.created_at}}</a>
+        <p>
+        <a class="text-muted text-right"> Просмотров: {{blog.view_count}}</a>
+    </div>
+    <div class="card-body">
+        <div style="text-align:center">
+        <img src="{{blog.image | media_tag }}" class="img-fluid">
+            </div>
+        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+            <li>{{ blog.text }}</li>
+        </ul>
+    </div>
+</div>
+    </div>
+{% endblock %}

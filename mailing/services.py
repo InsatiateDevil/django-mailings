@@ -42,11 +42,11 @@ def get_mailings_counts():
         key_2 = 'active_mailings_count'
         mailings_count = cache.get(key_1)
         active_mailings_count = cache.get(key_2)
-        if mailings_count is None:
-            mailings_count = Mailing.objects.all().count()
+        if mailings_count or active_mailings_count:
+            mailings = Mailing.objects.all()
+            mailings_count = mailings.count()
+            active_mailings_count = mailings.filter(status=1).count()
             cache.set(key_1, mailings_count, timeout=60)
-        if active_mailings_count is None:
-            active_mailings_count = Mailing.objects.filter(status=1).count()
             cache.set(key_2, active_mailings_count, timeout=60)
     else:
         mailings_count = Mailing.objects.all().count()
@@ -59,9 +59,9 @@ def get_random_blogs():
         key = 'random_blogs'
         random_blogs = cache.get(key)
         if random_blogs is None:
-            random_blogs = list(Blog.objects.all().order_by('?')[:12])
+            random_blogs = list(Blog.objects.order_by('?')[:12])
             cache.set(key, random_blogs, timeout=60)
     else:
-        random_blogs = list(Blog.objects.all().order_by('?')[:12])
+        random_blogs = list(Blog.objects.order_by('?')[:12])
     shuffle(random_blogs)
     return random_blogs[:3]

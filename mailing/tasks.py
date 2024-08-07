@@ -12,7 +12,7 @@ def create_mailing_task(mailing_id):
     if mailing:
         mailing.next_send_datetime += timedelta(minutes=mailing.period)
         if mailing.next_send_datetime > mailing.last_send_datetime:
-            mailing.status = 3
+            mailing.status = 4
         else:
             create_mailing_task.apply_async(
                 (mailing.id,),

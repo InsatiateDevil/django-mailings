@@ -29,12 +29,18 @@
             {{client.name}} - {{client.email}}|
             {% endfor %}</li>
         </ul>
-        <button type="button" class="btn btn-lg btn-block btn-outline-primary">
+        {% if mailing.status is 1 or mailing.status is 0 %}
+        <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'mailing:mailing_cancel' mailing.pk %}">
             Деактивировать
-        </button>
-        <a class="btn btn-lg btn-block btn-primary" href="#">Перейти в логи</a>
+        </a>
+        {% elif mailing.status is 3 and user.is_superuser or mailing.status is 3 and perms.mailing.can_change_mailing_status or mailing.status is 2 %}
+        <a class="btn btn-lg btn-block btn-success" href="{% url 'mailing:mailing_activate' mailing.pk %}">Активировать</a>
+        {% endif %}
+        <a class="btn btn-lg btn-block btn-primary" href="{% url 'mailing:mailingtry_list' mailing.pk %}">Перейти в логи</a>
         <a class="btn btn-lg btn-block btn-warning" href="{% url 'mailing:mailing_update' object.pk %}">Изменить</a>
+        {% if user.is_superuser %}
         <a class="btn btn-lg btn-block btn-danger" href="{% url 'mailing:mailing_delete' object.pk %}">Удалить</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

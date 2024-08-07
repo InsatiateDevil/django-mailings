@@ -78,8 +78,9 @@ class Mailing(models.Model):
     status_choices = (
         (0, 'Создана'),
         (1, 'Запущена'),
-        (2, 'Отменена'),
-        (3, 'Завершена')
+        (2, 'Отменена пользователем'),
+        (3, 'Отменена персоналом'),
+        (4, 'Завершена')
     )
     status = models.IntegerField(
         choices=status_choices,
@@ -106,6 +107,10 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = "рассылка"
         verbose_name_plural = "рассылки"
+        permissions = (
+            ('mailing.can_change_mailing_status', 'Может изменять статус рассылки'),
+            ('mailing.can_view_all_mailings', 'Может просматривать все рассылки'),
+        )
 
 
 class MailingTry(models.Model):

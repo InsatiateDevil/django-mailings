@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load to_100_symbols %}
+{% load media_tag %}
+{% block content %}
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Отчет по рассылке {{ mailing_obj.name</h1>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+            <div class="col-12 card mb-4 box-shadow">
+                <div class="card-body">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Идентификационный номер</th>
+                          <th>Рассылка</th>
+                          <th>Статус</th>
+                          <th>Время отправки</th>
+                          <th>Email клиента</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for mailingtry in object_list %}
+                        <tr>
+                          <td>{{ mailingtry.id }}</td>
+                          <td>{{ mailingtry.mailing.name }}</td>
+                          {% if mailingtry.status %}
+                            <td>Успешно</td>
+                          {% else %}
+                            <td>Ошибка</td>
+                          {% endif %}
+                          <td>{{ mailingtry.try_datetime }}</td>
+                          <td>{{ mailingtry.client.email  }}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

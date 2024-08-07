@@ -7,9 +7,7 @@
         <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
             <h1 class="display-4">Главная страница</h1>
         </div>
-
         <div class="container">
-
             <div class="row text-center">
                 <div class="col-12 d-flex justify-content-center">
                     <div class="col-6 card mb-4 box-shadow">
@@ -29,27 +27,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="row text-center">
-                <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="row">
                     {% for blog in blog_list %}
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-header">
-                            <h4 class="my-0 font-weight-normal">{{ blog.title }}</h4>
-                        </div>
-
-                        <div class="card-body">
-                            <img class="card-img-top"
-                            src="{{ blog.image | media_tag }}"
-                            width="300" height="300">
-                            <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                                <li>{{blog.text | to_100_symbols }}</li>
-                            </ul>
-                            <hr>
-                        </div>
-                    </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">{{blog.title}}</h4>
                 </div>
+                <div class="card-body">
+                    <img src="{{blog.image | media_tag }}" class="card-img-top img-thumbnail">
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>{{ blog.text | to_100_symbols }}</li>
+                    </ul>
+                    <a class="btn btn-mb btn-outline-primary" href="{% url 'blog:blog_detail' blog.pk %}">Подробнее</a>
+                    <hr>
+                    <a class="text-muted float-right">Количество просмотров:{{blog.view_count}}</a>
+                </div>
+            </div>
+        </div>
 
-                {% endfor %}
+        {% endfor %}
 
             </div>
         </div>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load to_100_symbols %}
+{% load media_tag %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Сообщения</h1>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        {% for user_user in object_list %}
+
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">
+                        {{ user_user.email }}</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>ФИО пользователя: {{ user_user.first_name }} {{ user_user.last_name }}</li>
+                    </ul>
+                    <a class="btn btn-mb btn-outline-primary"
+                       href="#">Подробности</a>
+                    <hr>
+                    {% if user.is_superuser or perms.users.can_change_status %}
+                    {% if user_user.is_active %}
+                    <a class="btn btn-mb btn-outline-primary" href="{% url 'users:user_status' user_user.id %}">Деактивировать</a>
+                    {% else %}
+                    <a class="btn btn-mb btn-outline-primary" href="{% url 'users:user_status' user_user.id %}">Активировать</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,11 +1,15 @@
 import secrets
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, \
+    PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView, DetailView, FormView
+from django.views.generic import CreateView, UpdateView, DetailView, FormView, \
+    ListView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm, UserUpdateForm, PasswordRecoveryForm, \
@@ -90,3 +94,27 @@ class PasswordRecoveryView(FormView):
                 recipient_list=[user.email],
             )
             return super().form_valid(form)
+
+
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = User
+    permission_required = 'users.can_view_users'
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.filter(pk=request.POST.get('id')).first()
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+        user.save()
+        return redirect('users:user_list')
+
+
+def manage_user_status(request, pk):
+    user = User.objects.filter(pk=pk).first()
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
+    user.save()
+    return redirect('users:user_list')

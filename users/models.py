@@ -39,6 +39,10 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ['-date_joined']
+        permissions = (
+            ('users.can_change_status', 'Может изменять статус пользователя'),
+            ('users.can_view_users', 'Может просматривать список пользователей'),
+        )
 
     def __str__(self):
         return self.email
