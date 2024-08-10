@@ -7,6 +7,7 @@ from blog.models import Blog
 # Create your views here.
 class BlogListView(ListView):
     model = Blog
+    paginate_by = 8
 
 
 class BlogDetailView(DetailView):

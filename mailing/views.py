@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, \
     DeleteView, TemplateView
@@ -9,6 +9,7 @@ from mailing.forms import MailingForm
 from mailing.models import Mailing, Client, Message, MailingTry
 from mailing.services import get_uniq_clients_count, get_mailings_counts, \
     get_random_blogs
+from mailing.tasks import activate_mailings
 
 
 # Create your views here.
@@ -19,7 +20,8 @@ class HomeTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['uniq_clients'] = get_uniq_clients_count()
-        context['mailings_count'], context['active_mailings'] = get_mailings_counts()
+        context['mailings_count'], context[
+            'active_mailings'] = get_mailings_counts()
         context['blog_list'] = get_random_blogs()
         return context
 
@@ -52,6 +54,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         mailing.next_send_datetime = mailing.first_send_datetime
         mailing.owner = self.request.user
         mailing.save()
+        activate_mailings.apply_async(mailing.id)
         return super().form_valid(form)
 
 
@@ -166,20 +169,20 @@ class MessageDetailView(LoginRequiredMixin, DetailView):
         return obj
 
 
-
-
 def mailing_cancel(request, pk):
     mailing = Mailing.objects.filter(pk=pk).first()
     if request.user == mailing.owner:
         mailing.status = 2
         mailing.save()
         return redirect('mailing:mailing_detail', pk=pk)
-    elif request.user.is_superuser or request.user.has_perm('mailing.can_change_mailing_status'):
+    elif request.user.is_superuser or request.user.has_perm(
+            'mailing.can_change_mailing_status'):
         mailing.status = 3
         mailing.save()
         return redirect('mailing:mailing_detail', pk=pk)
     else:
-        raise PermissionDenied('Шуруй отседова, ПЁС(плюс пасхалка получается)))))))')
+        raise PermissionDenied(
+            'Шуруй отседова, ПЁС(плюс пасхалка получается)))))))')
 
 
 def mailing_activate(request, pk):
@@ -190,7 +193,8 @@ def mailing_activate(request, pk):
         mailing.status = 1
         mailing.save()
         return redirect('mailing:mailing_detail', pk=pk)
-    elif request.user.is_superuser or request.user.has_perm('mailing.can_change_mailing_status') and mailing.status == 3:
+    elif request.user.is_superuser or request.user.has_perm(
+            'mailing.can_change_mailing_status') and mailing.status == 3:
         mailing.status = 1
         mailing.save()
         return redirect('mailing:mailing_detail', pk=pk)
@@ -213,6 +217,12 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
 
 class MailingTryListView(LoginRequiredMixin, ListView):
     model = MailingTry
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mailing_obj'] = Mailing.objects.filter(
+            pk=self.kwargs['pk']).first()
+        return context
 
     def get_queryset(self, *args, **kwargs):
         user = self.request.user

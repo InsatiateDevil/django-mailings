@@ -36,7 +36,7 @@ def create_mailing_task(mailing_id):
                 )
             except smtplib.SMTPException as e:
                 MailingTry.objects.create(
-                    status=True,
+                    status=False,
                     response=str(e),
                     mailing=mailing,
                     client=client
