@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
@@ -54,7 +56,8 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         mailing.next_send_datetime = mailing.first_send_datetime
         mailing.owner = self.request.user
         mailing.save()
-        activate_mailings.apply_async(mailing.id)
+        activate_time = mailing.next_send_datetime - timedelta(minutes=5)
+        activate_mailings.apply_async((mailing.id,), eta=activate_time)
         return super().form_valid(form)
 
 
